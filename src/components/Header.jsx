@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/useCart';
 
@@ -59,5 +60,9 @@ function Header() {
     </header>
   );
 }
+
+Header.propTypes = {
+  // This component doesn't receive props directly
+};
 
 export default Header;

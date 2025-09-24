@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/useCart';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 function Cart() {
   const { 
@@ -13,6 +15,9 @@ function Cart() {
   } = useCart();
 
   const formatPrice = (price) => {
+    if (typeof price !== 'number' || isNaN(price)) {
+      return '$0.00';
+    }
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
@@ -20,21 +25,41 @@ function Cart() {
   };
 
   const handleQuantityChange = (productId, newQuantity) => {
-    const quantity = parseInt(newQuantity);
-    if (quantity <= 0) {
-      removeFromCart(productId);
-    } else {
-      updateQuantity(productId, quantity);
+    try {
+      const quantity = parseInt(newQuantity, 10);
+      if (isNaN(quantity)) {
+        console.warn('Invalid quantity provided:', newQuantity);
+        return;
+      }
+      
+      if (quantity <= 0) {
+        removeFromCart(productId);
+      } else if (quantity > 99) {
+        // Limit quantity to reasonable amount
+        updateQuantity(productId, 99);
+      } else {
+        updateQuantity(productId, quantity);
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
     }
   };
 
   const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+    try {
+      removeFromCart(productId);
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
   };
 
   const handleClearCart = () => {
-    if (window.confirm('Are you sure you want to remove all items from your cart?')) {
-      clearCart();
+    try {
+      if (window.confirm('Are you sure you want to remove all items from your cart?')) {
+        clearCart();
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
     }
   };
 
@@ -191,5 +216,9 @@ function Cart() {
     </div>
   );
 }
+
+Cart.propTypes = {
+  // This component doesn't receive props directly
+};
 
 export default Cart;

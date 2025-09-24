@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Footer() {
   return (
@@ -81,5 +82,9 @@ function Footer() {
     </footer>
   );
 }
+
+Footer.propTypes = {
+  // This component doesn't receive props directly
+};
 
 export default Footer;

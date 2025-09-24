@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Loading({ message = "Loading..." }) {
   return (
@@ -12,5 +13,13 @@ function Loading({ message = "Loading..." }) {
     </div>
   );
 }
+
+Loading.propTypes = {
+  message: PropTypes.string
+};
+
+Loading.defaultProps = {
+  message: "Loading..."
+};
 
 export default Loading;

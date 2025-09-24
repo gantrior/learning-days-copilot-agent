@@ -72,16 +72,19 @@ src/
 │   ├── Footer.jsx      # Contact info and social links
 │   ├── ProductCard.jsx # Individual product display
 │   ├── ProductGrid.jsx # Product collection layout
-│   └── Loading.jsx     # Loading state component
+│   ├── Loading.jsx     # Loading state component
+│   └── ErrorBoundary.jsx # Error boundary for runtime errors
 ├── pages/              # Route-based page components
 │   ├── HomePage.jsx    # Landing page with featured products
 │   ├── SearchResults.jsx # Search results and filtering
 │   ├── Cart.jsx        # Shopping cart management
-│   ├── Checkout.jsx    # Order process form
+│   ├── Checkout.jsx    # Order process form with validation
 │   └── OrderConfirmation.jsx # Order success page
 ├── contexts/           # React Context providers
 │   ├── CartContext.jsx # Global cart state management
 │   └── useCart.js      # Custom cart hook
+├── utils/             # Utility functions and validation
+│   └── validation.js  # Form validation schemas and formatters
 ├── data/              # Static data and mock content
 │   └── products.js    # Product catalog with helper functions
 ├── styles/            # CSS styling files
@@ -96,6 +99,9 @@ src/
 - **Frontend Framework**: React 18.3.1
 - **Build Tool**: Vite 7.1.7  
 - **Routing**: React Router DOM 7.9.1
+- **Form Validation**: react-hook-form for robust form handling
+- **Error Handling**: react-error-boundary for runtime error recovery
+- **Type Validation**: PropTypes for development-time type checking
 - **State Management**: React Context API with useReducer
 - **Styling**: CSS3 with custom properties and responsive design
 - **Data Persistence**: localStorage for cart state
@@ -191,6 +197,20 @@ src/
 - [x] Responsive design on different screen sizes
 - [x] Loading states and animations
 - [x] localStorage persistence across sessions
+- [x] Error boundaries catch and display runtime errors
+- [x] Form validation with real-time feedback
+- [x] PropTypes validation in development
+- [x] Accessible error messages and ARIA support
+
+### Error Handling & Validation
+The application includes comprehensive error handling and validation:
+- **React Error Boundaries** for graceful error recovery
+- **react-hook-form** for robust form validation
+- **PropTypes** for runtime type checking
+- **Accessible validation** with ARIA attributes
+- **Input formatting** for better user experience
+
+See [Error Handling Guide](docs/ERROR_HANDLING.md) for detailed implementation patterns.
 
 ### Browser Support
 - Chrome 90+
