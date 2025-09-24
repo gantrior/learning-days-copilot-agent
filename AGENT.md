@@ -41,6 +41,35 @@ Runs ESLint to check code quality and style
 - Enforces consistent code style
 - Reports accessibility issues
 
+### Testing
+```bash
+# Run unit and integration tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run E2E tests (requires browsers installed)
+npm run test:e2e
+
+# Run E2E tests with UI
+npm run test:e2e:ui
+
+# Run E2E tests in headed mode (visible browser)
+npm run test:e2e:headed
+
+# Run all tests (unit + E2E)
+npm run test:all
+```
+
+**Testing Framework:**
+- **Jest** and **React Testing Library** for unit/integration tests
+- **Playwright** for end-to-end testing
+- **Coverage reporting** with HTML and console output
+
 ## Development Workflow
 
 ### 1. Environment Setup
@@ -156,6 +185,17 @@ function MyComponent() {
 
 #### Testing Commands
 ```bash
+# Unit and Integration Tests
+npm test                    # Run all Jest tests
+npm run test:watch          # Run tests in watch mode
+npm run test:coverage       # Run tests with coverage report
+
+# End-to-End Tests
+npm run test:e2e           # Run Playwright E2E tests
+npm run test:e2e:ui        # Run E2E tests with Playwright UI
+npm run test:e2e:headed    # Run E2E tests in headed mode
+npm run test:all           # Run both unit and E2E tests
+
 # Development testing
 npm run dev
 # Visit http://localhost:5173/ and test manually
@@ -165,6 +205,11 @@ npm run build
 npm run preview
 # Visit preview URL and test production build
 ```
+
+**Test Coverage Areas:**
+- **Unit Tests**: Components (ProductCard, Header, Loading), Context (CartContext), and Hooks (useCart)
+- **Integration Tests**: Cart operations, localStorage persistence, form handling
+- **E2E Tests**: Complete user workflows, search functionality, cart checkout process
 
 ### 7. Common Development Tasks
 
