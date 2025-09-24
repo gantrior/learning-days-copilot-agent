@@ -1,12 +1,36 @@
 import React, { useState } from 'react';
 import { useCart } from '../contexts/useCart';
+import { useWishlist } from '../contexts/WishlistContext';
 
 function ProductCard({ product }) {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist, isAuthenticated } = useWishlist();
   const [imageError, setImageError] = useState(false);
+  const [wishlistAction, setWishlistAction] = useState(false);
+
+  const inWishlist = isInWishlist(product.id);
 
   const handleAddToCart = () => {
     addToCart(product);
+  };
+
+  const handleWishlistClick = () => {
+    if (!isAuthenticated) {
+      // Could trigger auth modal here, for now just show alert
+      alert('Please sign in to add items to your wishlist! 🔑');
+      return;
+    }
+
+    setWishlistAction(true);
+    
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+    
+    // Reset animation state
+    setTimeout(() => setWishlistAction(false), 300);
   };
 
   const handleImageError = () => {
@@ -63,6 +87,17 @@ function ProductCard({ product }) {
             onError={handleImageError}
           />
         )}
+        
+        {/* Wishlist heart button */}
+        <button 
+          className={`wishlist-btn ${inWishlist ? 'in-wishlist' : ''} ${wishlistAction ? 'animate' : ''}`}
+          onClick={handleWishlistClick}
+          title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          {inWishlist ? '❤️' : '🤍'}
+        </button>
+        
         {!product.inStock && (
           <div className="out-of-stock-overlay">
             Out of Stock
