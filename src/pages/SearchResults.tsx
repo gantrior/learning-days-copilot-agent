@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ProductGrid from '../components/ProductGrid';
-import Loading from '../components/Loading';
-import { searchProducts, getProductsByCategory, categories } from '../data/products';
+import ProductGrid from '../components/ProductGrid.js';
+import Loading from '../components/Loading.js';
+import { searchProducts, getProductsByCategory, categories } from '../data/products.js';
+import { Product } from '../types/index.js';
+
+type SortOption = 'name' | 'price-low' | 'price-high' | 'rating';
 
 function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [sortBy, setSortBy] = useState('name');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [sortBy, setSortBy] = useState<SortOption>('name');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || 'all';
@@ -18,9 +21,9 @@ function SearchResults() {
     // Simulate loading for demo purposes
     setIsLoading(true);
     
-    const loadProducts = () => {
+    const loadProducts = (): void => {
       // Apply search and category filters
-      let products = [];
+      let products: Product[] = [];
       
       if (query) {
         products = searchProducts(query);
@@ -60,7 +63,7 @@ function SearchResults() {
     setSelectedCategory(categoryParam);
   }, [categoryParam]);
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = (category: string): void => {
     setSelectedCategory(category);
     
     // Update URL parameters
@@ -73,11 +76,11 @@ function SearchResults() {
     setSearchParams(newParams);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+  const handleSortChange = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setSortBy(e.target.value as SortOption);
   };
 
-  const getPageTitle = () => {
+  const getPageTitle = (): string => {
     if (query) {
       return `Search Results for "${query}"`;
     } else if (categoryParam !== 'all') {

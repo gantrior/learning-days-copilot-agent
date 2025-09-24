@@ -1,12 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../contexts/useCart';
+import { useCart } from '../contexts/useCart.js';
+
+interface CheckoutFormData {
+  // Contact Information
+  email: string;
+  phone: string;
+  
+  // Shipping Information
+  firstName: string;
+  lastName: string;
+  address: string;
+  apartment: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  
+  // Payment Information
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  nameOnCard: string;
+  
+  // Special Instructions
+  specialInstructions: string;
+}
+
+interface FormErrors {
+  [key: string]: string;
+}
 
 function Checkout() {
   const navigate = useNavigate();
   const { cartItems, totalPrice, clearCart } = useCart();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CheckoutFormData>({
     // Contact Information
     email: '',
     phone: '',
@@ -31,17 +60,17 @@ function Checkout() {
     specialInstructions: ''
   });
   
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const formatPrice = (price) => {
+  const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
     }).format(price);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -57,8 +86,8 @@ function Checkout() {
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
     
     // Contact validation
     if (!formData.email) newErrors.email = 'Email is required';
@@ -97,13 +126,13 @@ function Checkout() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const generateOrderNumber = () => {
+  const generateOrderNumber = (): string => {
     const timestamp = Date.now().toString();
     const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     return `CAT-${timestamp.slice(-6)}${randomNum}`;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -121,10 +150,13 @@ function Checkout() {
       
       // Store order in localStorage for demo
       const order = {
+        id: orderNumber,
         orderNumber,
         items: cartItems,
-        total: orderTotal,
-        shippingInfo: {
+        totalPrice: orderTotal,
+        customerInfo: {
+          email: formData.email,
+          phone: formData.phone,
           firstName: formData.firstName,
           lastName: formData.lastName,
           address: formData.address,
@@ -134,7 +166,7 @@ function Checkout() {
           zipCode: formData.zipCode
         },
         orderDate: new Date().toISOString(),
-        status: 'confirmed'
+        status: 'confirmed' as const
       };
       
       const existingOrders = JSON.parse(localStorage.getItem('catShopOrders') || '[]');
@@ -203,7 +235,7 @@ function Checkout() {
                     value={formData.email}
                     onChange={handleInputChange}
                     className={errors.email ? 'error' : ''}
-                    placeholder="your.email@example.com"
+                    placeholder="your-email@example.com"
                   />
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
@@ -310,7 +342,6 @@ function Checkout() {
                     <option value="NY">New York</option>
                     <option value="TX">Texas</option>
                     <option value="FL">Florida</option>
-                    <option value="WA">Washington</option>
                     {/* Add more states as needed */}
                   </select>
                   {errors.state && <span className="error-message">{errors.state}</span>}
@@ -335,8 +366,8 @@ function Checkout() {
             {/* Payment Information */}
             <section className="form-section">
               <h2>Payment Information</h2>
-              <p className="demo-note">
-                ⚠️ This is a demo site. Use fake card information for testing.
+              <p className="demo-notice">
+                🔒 This is a demo checkout. Use fake payment information.
               </p>
               
               <div className="form-group">
@@ -403,76 +434,66 @@ function Checkout() {
               <h2>Special Instructions (Optional)</h2>
               <div className="form-group">
                 <label htmlFor="specialInstructions">
-                  Delivery Instructions for Your Cat Products
+                  Any special delivery instructions?
                 </label>
                 <textarea
                   id="specialInstructions"
                   name="specialInstructions"
                   value={formData.specialInstructions}
                   onChange={handleInputChange}
-                  rows="3"
-                  placeholder="Any special delivery instructions for your cat's happiness..."
+                  rows={3}
+                  placeholder="Please leave by the front door, ring doorbell, etc."
                 />
               </div>
             </section>
 
             {errors.submit && (
-              <div className="form-error">
-                {errors.submit}
-              </div>
+              <div className="error-message submit-error">{errors.submit}</div>
             )}
 
             <button 
               type="submit" 
-              className="place-order-btn"
+              className={`submit-btn ${isProcessing ? 'processing' : ''}`}
               disabled={isProcessing}
             >
-              {isProcessing ? 'Processing Order...' : `Place Order • ${formatPrice(total)}`}
+              {isProcessing ? 'Processing Order...' : `Complete Order - ${formatPrice(total)}`}
             </button>
           </form>
 
-          <div className="order-summary-sidebar">
-            <div className="order-summary">
-              <h2>Order Summary</h2>
-              
-              <div className="order-items">
-                {cartItems.map(item => (
-                  <div key={item.id} className="order-item">
-                    <img src={item.image} alt={item.name} className="item-thumbnail" />
-                    <div className="item-info">
-                      <span className="item-name">{item.name}</span>
-                      <span className="item-quantity">Qty: {item.quantity}</span>
-                    </div>
-                    <span className="item-total">
-                      {formatPrice(item.price * item.quantity)}
-                    </span>
+          {/* Order Summary Sidebar */}
+          <div className="order-summary">
+            <h2>Order Summary</h2>
+            
+            <div className="order-items">
+              {cartItems.map(item => (
+                <div key={item.id} className="summary-item">
+                  <img src={item.image} alt={item.name} className="item-thumbnail" />
+                  <div className="item-info">
+                    <h4>{item.name}</h4>
+                    <p>Qty: {item.quantity}</p>
+                    <p className="item-price">{formatPrice(item.price * item.quantity)}</p>
                   </div>
-                ))}
-              </div>
-              
-              <div className="order-totals">
-                <div className="total-line">
-                  <span>Subtotal:</span>
-                  <span>{formatPrice(subtotal)}</span>
                 </div>
-                <div className="total-line">
-                  <span>Shipping:</span>
-                  <span className="free-shipping">FREE</span>
-                </div>
-                <div className="total-line">
-                  <span>Tax:</span>
-                  <span>{formatPrice(tax)}</span>
-                </div>
-                <div className="total-line grand-total">
-                  <span>Total:</span>
-                  <span>{formatPrice(total)}</span>
-                </div>
-              </div>
+              ))}
             </div>
             
-            <div className="security-info">
-              <h3>🔒 Secure Checkout</h3>
-              <p>Your payment information is encrypted and secure.</p>
+            <div className="order-totals">
+              <div className="total-row">
+                <span>Subtotal:</span>
+                <span>{formatPrice(subtotal)}</span>
+              </div>
+              <div className="total-row">
+                <span>Tax (8%):</span>
+                <span>{formatPrice(tax)}</span>
+              </div>
+              <div className="total-row">
+                <span>Shipping:</span>
+                <span>Free</span>
+              </div>
+              <div className="total-row total">
+                <span><strong>Total:</strong></span>
+                <span><strong>{formatPrice(total)}</strong></span>
+              </div>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Cat E-Shop Demo** - A React + Vite e-commerce demonstration project designed for GitHub Copilot Agent development and experimentation.
+**Cat E-Shop Demo** - A React + TypeScript + Vite e-commerce demonstration project designed for GitHub Copilot Agent development and experimentation, now with enhanced type safety and superior developer experience.
 
 ## Quick Start Commands
 
@@ -13,6 +13,7 @@ npm run dev
 Starts the Vite development server at `http://localhost:5173/`
 - Hot reload enabled
 - Fast refresh for React components
+- TypeScript compilation and error checking
 - ESLint integration for code quality
 
 ### Build for Production
@@ -20,6 +21,7 @@ Starts the Vite development server at `http://localhost:5173/`
 npm run build
 ```
 Creates optimized production build in `dist/` directory
+- TypeScript compilation and type checking
 - Minified and bundled JavaScript/CSS
 - Asset optimization and hashing
 - Ready for deployment
@@ -37,9 +39,19 @@ Serves the production build locally for testing
 npm run lint
 ```
 Runs ESLint to check code quality and style
+- TypeScript-specific linting rules
 - Catches common React anti-patterns
 - Enforces consistent code style
 - Reports accessibility issues
+
+### Type Checking
+```bash
+npx tsc --noEmit
+```
+Runs TypeScript compiler for type checking without emitting files
+- Validates all TypeScript interfaces and types
+- Catches type errors before runtime
+- Ensures type safety across the codebase
 
 ## Development Workflow
 

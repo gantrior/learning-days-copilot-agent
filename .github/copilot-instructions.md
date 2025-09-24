@@ -2,64 +2,80 @@
 
 ## Project Overview
 
-This is a **Cat E-Shop Demo** built with React and Vite, designed specifically as a GitHub Copilot Agent development playground. The project demonstrates a fully functional e-commerce frontend with cat-themed products, shopping cart functionality, and checkout process.
+This is a **Cat E-Shop Demo** built with React, TypeScript, and Vite, designed specifically as a GitHub Copilot Agent development playground. The project demonstrates a fully functional e-commerce frontend with cat-themed products, shopping cart functionality, and checkout process, now with enhanced type safety and developer experience.
 
 ## Architecture & Design Principles
 
 ### Technology Stack
 - **Frontend Framework**: React 18+ with functional components and hooks
+- **Type System**: TypeScript for enhanced type safety and developer experience
 - **Build Tool**: Vite for fast development and optimized builds
 - **Routing**: React Router DOM for client-side navigation
-- **State Management**: React Context API for global cart state
+- **State Management**: React Context API with TypeScript for global cart state
 - **Styling**: CSS modules with responsive design
 - **Data Persistence**: localStorage for cart state persistence
 
 ### Project Structure
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── Header.jsx      # Navigation with search and cart
-│   ├── Footer.jsx      # Contact info and social links
-│   ├── ProductCard.jsx # Individual product display
-│   └── ProductGrid.jsx # Product collection layout
-├── pages/              # Route-based page components
-│   ├── HomePage.jsx    # Landing page with featured products
-│   ├── SearchResults.jsx # Search results and filtering
-│   ├── Cart.jsx        # Shopping cart management
-│   └── Checkout.jsx    # Order process and confirmation
-├── contexts/           # React Context providers
-│   └── CartContext.jsx # Global cart state management
-├── data/              # Static data and mock content
-│   └── products.js    # Product catalog with cat items
+├── components/          # Reusable UI components (TypeScript)
+│   ├── Header.tsx      # Navigation with search and cart
+│   ├── Footer.tsx      # Contact info and social links
+│   ├── ProductCard.tsx # Individual product display
+│   ├── ProductGrid.tsx # Product collection layout
+│   └── Loading.tsx     # Loading state component
+├── pages/              # Route-based page components (TypeScript)
+│   ├── HomePage.tsx    # Landing page with featured products
+│   ├── SearchResults.tsx # Search results and filtering
+│   ├── Cart.tsx        # Shopping cart management
+│   ├── Checkout.tsx    # Order process form
+│   └── OrderConfirmation.tsx # Order success page
+├── contexts/           # React Context providers (TypeScript)
+│   ├── CartContext.tsx # Global cart state management
+│   └── useCart.ts      # Custom cart hook
+├── types/             # TypeScript type definitions
+│   └── index.ts       # Core interfaces and types
+├── data/              # Static data and mock content (TypeScript)
+│   └── products.ts    # Product catalog with helper functions
 ├── styles/            # CSS styling files
 │   ├── index.css      # Global styles and reset
 │   ├── App.css        # Main application styles
 │   └── components.css # Component-specific styles
-└── App.jsx            # Main app with routing setup
+└── App.tsx            # Main app with routing setup
 ```
 
 ## Code Style Conventions
 
 ### Component Architecture
-- **Use functional components exclusively** with React hooks
+- **Use functional components exclusively** with React hooks and TypeScript
 - **Follow PascalCase naming** for component files and functions
-- **Use descriptive prop names** and include PropTypes when applicable
+- **Use TypeScript interfaces** for prop types and component contracts
 - **Implement single responsibility principle** - one component per file
 - **Create reusable components** rather than duplicating code
 
 ### React Patterns
-- **State Management**: Use `useState` for local state, Context API for global state
-- **Side Effects**: Use `useEffect` for data fetching and cleanup
-- **Event Handling**: Use arrow functions for event handlers
+- **State Management**: Use `useState` with TypeScript generics for local state, Context API with typed interfaces for global state
+- **Side Effects**: Use `useEffect` for data fetching and cleanup with proper dependency typing
+- **Event Handling**: Use typed arrow functions for event handlers
 - **Conditional Rendering**: Use ternary operators for simple conditions, logical AND for boolean conditions
-- **List Rendering**: Always include unique `key` props when mapping arrays
+- **List Rendering**: Always include unique `key` props when mapping arrays with proper typing
 
 ### File Organization
-- **Component files**: Place in `src/components/` with `.jsx` extension
-- **Page components**: Place in `src/pages/` for route-based components
-- **Context providers**: Place in `src/contexts/` with descriptive names
-- **Static data**: Place in `src/data/` as `.js` modules
+- **Component files**: Place in `src/components/` with `.tsx` extension
+- **Page components**: Place in `src/pages/` for route-based components with `.tsx` extension
+- **Context providers**: Place in `src/contexts/` with descriptive names and `.tsx` extension
+- **Hooks**: Place in `src/contexts/` with `.ts` extension
+- **Type definitions**: Place in `src/types/` as `.ts` modules
+- **Static data**: Place in `src/data/` as `.ts` modules with proper typing
 - **Styles**: Place in `src/styles/` with component-specific organization
+
+### TypeScript Conventions
+- **Use strict TypeScript configuration** with all strict mode options enabled
+- **Define interfaces** for all data structures (Product, CartItem, User, Order, etc.)
+- **Type all function parameters and return values** for better developer experience
+- **Use generic types** where appropriate for reusable components
+- **Avoid `any` type** - use proper typing or union types instead
+- **Export types and interfaces** from centralized type definition files
 
 ### CSS and Styling
 - **Use semantic class names** that describe purpose, not appearance
@@ -68,18 +84,31 @@ src/
 - **Use CSS custom properties** for consistent theming
 - **Maintain cat-themed color palette**: oranges, browns, and warm tones
 
-## State Management Approach
+## TypeScript Integration
 
-### Cart Context Structure
-```javascript
-const CartContext = {
-  cartItems: [],           // Array of cart items with product and quantity
-  totalItems: 0,          // Total number of items in cart
-  totalPrice: 0,          // Total price of all items
-  addToCart: (product) => {}, // Add product to cart
-  removeFromCart: (id) => {}, // Remove product from cart
-  updateQuantity: (id, quantity) => {}, // Update item quantity
-  clearCart: () => {}     // Clear all cart items
+### Core Type Definitions
+The project includes comprehensive TypeScript interfaces in `src/types/index.ts`:
+
+- **Product**: Defines cat product structure with id, name, price, category, etc.
+- **CartItem**: Extends Product with quantity for shopping cart items
+- **Category**: Defines product categories with icons and names
+- **Order**: Complete order structure with customer info and items
+- **User**: User profile and contact information
+- **CartContextValue**: Typed interface for cart context operations
+- **CartAction**: Union type for cart reducer actions
+
+### State Management with TypeScript
+
+### Cart Context Structure (TypeScript)
+```typescript
+interface CartContextValue {
+  cartItems: CartItem[];           // Array of typed cart items with product and quantity
+  totalItems: number;             // Total number of items in cart
+  totalPrice: number;             // Total price of all items
+  addToCart: (product: Product) => void;        // Add product to cart
+  removeFromCart: (id: number) => void;         // Remove product from cart
+  updateQuantity: (id: number, quantity: number) => void; // Update item quantity
+  clearCart: () => void;          // Clear all cart items
 }
 ```
 
