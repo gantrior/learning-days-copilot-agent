@@ -1497,3 +1497,101 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* ========================================
+   ERROR BOUNDARY STYLES
+   ======================================== */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.error-content {
+  max-width: 500px;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f8d7da;
+  text-align: center;
+}
+
+.error-content h2 {
+  color: #8b4513;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.error-content p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.error-details {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.error-details summary {
+  cursor: pointer;
+  color: #8b4513;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.error-details pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  font-size: 0.9rem;
+  color: #721c24;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.retry-btn, 
+.error-actions .home-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.retry-btn {
+  background-color: #ff6b35;
+  color: white;
+}
+
+.retry-btn:hover {
+  background-color: #e55530;
+  transform: translateY(-2px);
+}
+
+.error-actions .home-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.error-actions .home-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}

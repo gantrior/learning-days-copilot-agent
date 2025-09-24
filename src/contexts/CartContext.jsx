@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const CartContext = createContext();
 
@@ -108,19 +109,53 @@ export function CartProvider({ children }) {
 
   // Cart actions
   const addToCart = (product) => {
-    dispatch({ type: 'ADD_TO_CART', payload: product });
+    try {
+      // Validate product before adding
+      if (!product || typeof product !== 'object') {
+        throw new Error('Invalid product data');
+      }
+      if (!product.id || !product.name || typeof product.price !== 'number') {
+        throw new Error('Product missing required fields');
+      }
+      
+      dispatch({ type: 'ADD_TO_CART', payload: product });
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      // In a real app, you might show a toast notification
+    }
   };
 
   const removeFromCart = (productId) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
+    try {
+      if (!productId) {
+        throw new Error('Product ID is required');
+      }
+      dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
+    } catch (error) {
+      console.error('Error removing product from cart:', error);
+    }
   };
 
   const updateQuantity = (productId, quantity) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
+    try {
+      if (!productId) {
+        throw new Error('Product ID is required');
+      }
+      if (typeof quantity !== 'number' || quantity < 0) {
+        throw new Error('Quantity must be a non-negative number');
+      }
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
+    } catch (error) {
+      console.error('Error updating product quantity:', error);
+    }
   };
 
   const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
+    try {
+      dispatch({ type: 'CLEAR_CART' });
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+    }
   };
 
   const value = {
@@ -139,5 +174,9 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
+
+CartProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default CartContext;

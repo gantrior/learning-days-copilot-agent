@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ProductCard from './ProductCard';
 
 function ProductGrid({ products, title, emptyMessage = "No products found." }) {
@@ -39,5 +40,28 @@ function ProductGrid({ products, title, emptyMessage = "No products found." }) {
     </div>
   );
 }
+
+ProductGrid.propTypes = {
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired,
+      rating: PropTypes.number,
+      inStock: PropTypes.bool
+    })
+  ),
+  title: PropTypes.string,
+  emptyMessage: PropTypes.string
+};
+
+ProductGrid.defaultProps = {
+  products: [],
+  title: null,
+  emptyMessage: "No products found."
+};
 
 export default ProductGrid;
