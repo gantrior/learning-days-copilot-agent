@@ -36,6 +36,7 @@ test-results/
 # Build artifacts
 build/
 out/
+coverage/
 
 # Cache directories
 .cache/
